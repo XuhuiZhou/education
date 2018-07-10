@@ -231,7 +231,7 @@ def main():
 
     f = open("testout.csv", "wt")
     writer = csv.writer(f)
-    writer.writerow(('train', 'dev', 'test'))
+    writer.writerow(('train', 'dev'))
 
     for epoch in range(1, num_epochs + 1):
     	print(epoch, mode, opt, lr, eps, decay_rate, schedule, patient, decay)
