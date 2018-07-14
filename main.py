@@ -239,7 +239,7 @@ def main():
     writer.writerow(('train', 'dev'))
 
     for epoch in range(1, num_epochs + 1):
-    	print(epoch, mode, opt, lr, eps, decay_rate, schedule, patient, decay)
+        print(epoch, mode, opt, lr, eps, decay_rate, schedule, patient, decay)
         print('Epoch %d (%s, optim: %s, learning rate=%.6f, eps=%.1e, decay rate=%.2f (schedule=%d, patient=%d, decay=%d)): ' % (epoch, mode, opt, lr, eps, decay_rate, schedule, patient, decay))
         train_err = 0.
         train_err_arc = 0.
