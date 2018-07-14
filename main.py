@@ -51,10 +51,10 @@ def main():
     model_name = 'network.pt'
     num_epochs = 150
     batch_size = 32
-    hidden_size = 200
+    hidden_size = 256
     arc_space = 512
     type_space = 128
-    num_layers = 8
+    num_layers = 9
     num_filters = 1
     learning_rate = 0.001
     opt = "adam" #default adam
@@ -65,7 +65,7 @@ def main():
     clip = 5 #what is clip
     gamma = 0
     schedule = 10 #?What is this?
-    p_rnn = (0.33,0.33)
+    p_rnn = (0.4,0.4)
     p_in = 0.33
     p_out = 0.33
     unk_replace = args.unk_replace# ?what is this?
@@ -162,9 +162,14 @@ def main():
         network.cuda()
 
     save_args()
-
+    
     #pred_writer = CoNLLXWriter(word_alphabet, char_alphabet, pos_alphabet, type_alphabet)
     #gold_writer = CoNLLXWriter(word_alphabet, char_alphabet, pos_alphabet, type_alphabet)
+    
+    ##print parameters:
+    for name, param in network.named_parameters():
+        if param.requires_grad:
+            print(name, param.data)
 
     def generate_optimizer(opt, lr, params):
         params = filter(lambda param: param.requires_grad, params)
@@ -371,6 +376,7 @@ def main():
             dev_total_inst += num_inst
 
         writer.writerow((t_ucorr_nopunc*100/t_total_nopunc,dev_ucorr_nopunc*100/dev_total_nopunc)) 
+        f.flush()
         #pred_writer.close()
         #gold_writer.close()
         print('W. Punct: ucorr: %d, lcorr: %d, total: %d, uas: %.2f%%, las: %.2f%%, ucm: %.2f%%, lcm: %.2f%%' % (

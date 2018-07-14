@@ -160,10 +160,10 @@ class SLSTM(nn.Module):
         initial_hidden_states = word_inputs
         initial_cell_states = word_inputs
 
-        #m = nn.Linear(200, self.hidden_size).cuda()
+        m = nn.Linear(400, self.hidden_size).cuda()
 
-        #initial_hidden_states = m(initial_hidden_states)
-        #initial_cell_states = m(initial_cell_states)
+        initial_hidden_states = F.relu(m(initial_hidden_states))
+        initial_cell_states = F.relu(m(initial_cell_states))
 
         # filter embedding states
         #print("[tlog] initial_hidden_states.size() " + str(initial_hidden_states.size()))
