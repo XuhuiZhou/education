@@ -167,10 +167,11 @@ def main():
     #gold_writer = CoNLLXWriter(word_alphabet, char_alphabet, pos_alphabet, type_alphabet)
     
     ##print parameters:
-    for name, param in network.named_parameters():
-        if param.requires_grad:
-            print(name, param.data)
+    print("number of parameters")
 
+    num_param = sum([param.nelement() for param in network.parameters()])
+
+    print(num_param)
     def generate_optimizer(opt, lr, params):
         params = filter(lambda param: param.requires_grad, params)
         if opt == 'adam':
