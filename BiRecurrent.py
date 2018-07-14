@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from lstm import VarMaskedFastLSTM
+#from lstm import VarMaskedFastLSTM
 #from s-lstm import VarMasked_S_LSTM
 from mlstm import SLSTM
 from neuronlp2.nn import Embedding
