@@ -51,7 +51,7 @@ def main():
     model_name = 'network.pt'
     num_epochs = 150
     batch_size = 32
-    hidden_size = 256
+    hidden_size = 300
     arc_space = 512
     type_space = 128
     num_layers = 9
@@ -73,14 +73,14 @@ def main():
 
     freeze = args.freeze
     word_embedding = 'glove'
-    word_path = "data/glove.6B.200d.txt"
+    word_path = "data/glove.6B.300d.txt"
 
     use_char = False
     char_embedding = None
     #char_path = args.char_path
 
     use_pos = True
-    pos_dim = 200
+    pos_dim = 300
     word_dict, word_dim = utils.load_embedding_dict(word_embedding, word_path)
     char_dict = None
     char_dim = 0
@@ -170,8 +170,8 @@ def main():
     print("number of parameters")
 
     num_param = sum([param.nelement() for param in network.parameters()])
-
     print(num_param)
+
     def generate_optimizer(opt, lr, params):
         params = filter(lambda param: param.requires_grad, params)
         if opt == 'adam':

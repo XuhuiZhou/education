@@ -160,10 +160,10 @@ class SLSTM(nn.Module):
         initial_hidden_states = word_inputs
         initial_cell_states = word_inputs
 
-        m = nn.Linear(400, self.hidden_size).cuda()
+        #m = nn.Linear(400, self.hidden_size).cuda()
 
-        initial_hidden_states = F.relu(m(initial_hidden_states))
-        initial_cell_states = F.relu(m(initial_cell_states))
+        #initial_hidden_states = F.relu(m(initial_hidden_states))
+        #initial_cell_states = F.relu(m(initial_cell_states))
 
         # filter embedding states
         #print("[tlog] initial_hidden_states.size() " + str(initial_hidden_states.size()))
@@ -177,6 +177,7 @@ class SLSTM(nn.Module):
 
         # record shape of the batch
         shape = initial_hidden_states.size()
+        #shape.append(self.hidden_size)
         ##print("[tlog] shape: " + str(shape)) # 10, 37, 100
 
         # initial embedding states
@@ -184,8 +185,8 @@ class SLSTM(nn.Module):
         embedding_cell_state = initial_cell_states.view(-1, self.hidden_size)  # 10*40, 600
 
         # randomly initialize the states
-        initial_hidden_states = self.create_nograd_variable(-0.05, 0.05, self.training, self.gpu, initial_hidden_states.size())
-        initial_cell_states = self.create_nograd_variable(-0.05, 0.05, self.training, self.gpu, initial_cell_states.size())
+        initial_hidden_states = self.create_nograd_variable(-0.05, 0.05, self.training, self.gpu, shape)
+        initial_cell_states = self.create_nograd_variable(-0.05, 0.05, self.training, self.gpu, shape)
 
 
         # filter it
@@ -220,6 +221,10 @@ class SLSTM(nn.Module):
             #print("[tlog] transformed_dummynode_hidden_states: " + str(transformed_dummynode_hidden_states)) # batch_size * seq_len, hidden_size
             #sys.exit(0)
             # input gate
+            #m = nn.Linear(400, self.hidden_size).cuda()
+            #embedding_hidden_state = F.relu(m(initial_hidden_states))
+            #embedding_cell_state = F.relu(m(initial_cell_states))
+
             gated_d_t = torch.sigmoid(
                 torch.matmul(dummynode_hidden_states, self.gated_Wxd) + torch.matmul(combined_word_hidden_state,
                                                                           self.gated_Whd) + self.gated_bd
