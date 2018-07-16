@@ -73,14 +73,14 @@ def main():
 
     freeze = args.freeze
     word_embedding = 'glove'
-    word_path = "data/glove.6B.300d.txt"
+    word_path = "data/glove.6B.100d.txt"
 
     use_char = False
     char_embedding = None
     #char_path = args.char_path
 
     use_pos = True
-    pos_dim = 300
+    pos_dim = 100
     word_dict, word_dim = utils.load_embedding_dict(word_embedding, word_path)
     char_dict = None
     char_dim = 0
