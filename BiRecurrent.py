@@ -10,6 +10,7 @@ from torch.autograd import Variable
 from lstm import VarMaskedFastLSTM
 #from s-lstm import VarMasked_S_LSTM
 from mlstm import SLSTM
+from slstm import SLSTM_1
 from neuronlp2.nn import Embedding
 from neuronlp2.nn import BiAAttention, BiLinear
 from neuronlp2.tasks import parser
@@ -41,7 +42,7 @@ class BiRecurrentConvBiAffine(nn.Module):
         self.char = char
         self.i = 1
 
-        RNN = VarMaskedFastLSTM
+        RNN = SLSTM_1
 
         dim_enc = word_dim
         if pos:
@@ -49,8 +50,8 @@ class BiRecurrentConvBiAffine(nn.Module):
         if char:
             dim_enc += num_filters
 
-        self.rnn = RNN(dim_enc, hidden_size, num_layers=num_layers, batch_first=True, bidirectional=True, dropout=p_rnn)
-        #self.rnn = RNN(hidden_size*2, dropout=p_rnn[0], step= 1, gpu = True)
+        #self.rnn = RNN(dim_enc, hidden_size, num_layers=num_layers, batch_first=True, bidirectional=True, dropout=p_rnn)
+        self.rnn = RNN(dim_enc, hidden_size*2, dropout=p_rnn[0], step= 1, gpu = True)
 
         out_dim = hidden_size * 2
         self.arc_h = nn.Linear(out_dim, arc_space)
@@ -78,8 +79,8 @@ class BiRecurrentConvBiAffine(nn.Module):
         # output from rnn [batch, length, hidden_size]
         #print("input")
         #print(input) 64*40*200
-        #output, hn = self.rnn(input,mask,num_layers=self.num_layers)
-        output, hn = self.rnn(input,mask,hx)
+        output, hn = self.rnn(input,mask,num_layers=self.num_layers)
+        #output, hn = self.rnn(input,mask,hx)
         #print("output")64*40*512
         #print(output)
 
