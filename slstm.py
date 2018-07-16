@@ -347,10 +347,10 @@ class SLSTM_1(nn.Module):
                 torch.matmul(initial_hidden_states, self.Wxo) + torch.matmul(concat_before_after, self.Who) +
                 torch.matmul(embedding_hidden_state, self.Wio) + torch.matmul(transformed_dummynode_hidden_states, self.Wdo) + self.bo
             )
-            print(embedding_hidden_state.shape, self.Wiu.shape)
+            #print(embedding_hidden_state.shape, self.Wiu.shape)
             embedding_cell_state = torch.tanh(
                 torch.matmul(initial_hidden_states, self.Wxu) +torch.matmul(concat_before_after, self.Whu)+
-                torch.matmul(embedding_hidden_state,self.Wiu) +torch.matmul(transformed_dummynode_hidden_states,self.Whu) + self.bu
+                torch.matmul(embedding_hidden_state,self.Wiu) +torch.matmul(transformed_dummynode_hidden_states,self.Wdu) + self.bu
                 )
 
             f1_t, f2_t, f3_t, f4_t, i_t = torch.unsqueeze(f1_t, dim=1), torch.unsqueeze(f2_t, dim=1), torch.unsqueeze(
