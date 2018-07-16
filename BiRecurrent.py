@@ -78,8 +78,8 @@ class BiRecurrentConvBiAffine(nn.Module):
         # output from rnn [batch, length, hidden_size]
         #print("input")
         #print(input) 64*40*200
-        output, hn = self.rnn(input,mask,num_layers=self.num_layers)
-        #output, hn = self.rnn(input,mask,hx)
+        #output, hn = self.rnn(input,mask,num_layers=self.num_layers)
+        output, hn = self.rnn(input,mask,hx)
         #print("output")64*40*512
         #print(output)
 
