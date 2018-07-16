@@ -17,7 +17,7 @@ class SLSTM_1(nn.Module):
 
     def __init__(self, word_dim, hidden_size,dropout,step, gpu):
         #current
-        super(SLSTM, self).__init__()
+        super(SLSTM_1, self).__init__()
         #self.config = config
         self.hidden_size = hidden_size
         self.gpu = gpu
