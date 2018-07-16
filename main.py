@@ -51,7 +51,7 @@ def main():
     model_name = 'network.pt'
     num_epochs = 150
     batch_size = 32
-    hidden_size = 300
+    hidden_size = 512
     arc_space = 512
     type_space = 128
     num_layers = 9
@@ -65,7 +65,7 @@ def main():
     clip = 5 #what is clip
     gamma = 0
     schedule = 10 #?What is this?
-    p_rnn = (0.4,0.4)
+    p_rnn = (0.33,0.33)
     p_in = 0.33
     p_out = 0.33
     unk_replace = args.unk_replace# ?what is this?
