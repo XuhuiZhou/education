@@ -49,7 +49,7 @@ def main():
     test_path = "data/test.stanford.conll"
     model_path = "models/parsing/biaffine/"
     model_name = 'network.pt'
-    num_epochs = 150
+    num_epochs = 80
     batch_size = 32
     hidden_size = 512
     arc_space = 512
@@ -65,7 +65,7 @@ def main():
     clip = 5 #what is clip
     gamma = 0
     schedule = 10 #?What is this?
-    p_rnn = (0.33,0.33)
+    p_rnn = (0.4,0.4)
     p_in = 0.33
     p_out = 0.33
     unk_replace = args.unk_replace# ?what is this?
@@ -314,7 +314,9 @@ def main():
         t_root_corr = 0.0
         t_total_root = 0.0
         t_total_inst = 0.0
-        for batch in conllx_data.iterate_batch_variable(data_train, batch_size):
+
+        list_iter = iter(conllx_data.iterate_batch_variable(data_train, batch_size))
+        for batch in list_iter:
             word, char, pos, heads, types, masks, lengths = batch
             heads_pred, types_pred = decode(word, char, pos, mask=masks, length=lengths, leading_symbolic=conllx_data.NUM_SYMBOLIC_TAGS)
             word = word.data.cpu().numpy()
@@ -344,6 +346,8 @@ def main():
             t_total_root += total_root
 
             t_total_inst += num_inst
+            for _ in range(10):   
+                next(list_iter, None)
 
         for batch in conllx_data.iterate_batch_variable(data_dev, batch_size):
             word, char, pos, heads, types, masks, lengths = batch
@@ -380,6 +384,7 @@ def main():
         f.flush()
         #pred_writer.close()
         #gold_writer.close()
+        print('Train Wo Punct:%.2f%%'(t_ucorr_nopunc*100/t_total_nopunc))
         print('W. Punct: ucorr: %d, lcorr: %d, total: %d, uas: %.2f%%, las: %.2f%%, ucm: %.2f%%, lcm: %.2f%%' % (
             dev_ucorr, dev_lcorr, dev_total, dev_ucorr * 100 / dev_total, dev_lcorr * 100 / dev_total, dev_ucomlpete * 100 / dev_total_inst, dev_lcomplete * 100 / dev_total_inst))
         print('Wo Punct: ucorr: %d, lcorr: %d, total: %d, uas: %.2f%%, las: %.2f%%, ucm: %.2f%%, lcm: %.2f%%' % (
