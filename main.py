@@ -384,7 +384,7 @@ def main():
         f.flush()
         #pred_writer.close()
         #gold_writer.close()
-        print('Train Wo Punct:%.2f%%'(t_ucorr_nopunc*100/t_total_nopunc))
+        print('Train Wo Punct:%.2f%%'% (t_ucorr_nopunc*100/t_total_nopunc))
         print('W. Punct: ucorr: %d, lcorr: %d, total: %d, uas: %.2f%%, las: %.2f%%, ucm: %.2f%%, lcm: %.2f%%' % (
             dev_ucorr, dev_lcorr, dev_total, dev_ucorr * 100 / dev_total, dev_lcorr * 100 / dev_total, dev_ucomlpete * 100 / dev_total_inst, dev_lcomplete * 100 / dev_total_inst))
         print('Wo Punct: ucorr: %d, lcorr: %d, total: %d, uas: %.2f%%, las: %.2f%%, ucm: %.2f%%, lcm: %.2f%%' % (
