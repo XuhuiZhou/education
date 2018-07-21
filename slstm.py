@@ -404,11 +404,13 @@ class SLSTM_1(nn.Module):
         #weight_alpha = self.create_to_hidden_variable(hidden_size, hidden_size, self.training, gpu)
         ###sentence level attention:
         big_H = torch.cat(hidden_states_list, dim = 0)
+        print(big_H.size())
         eps = torch.tanh(torch.matmul(big_H, self.weight_alpha) + self.bias_alpha)
         alpha = F.softmax(eps, dim = 0)
         #importance_sum = k(importance_matrix)
         #alpha = f(importance_matrix, importance_sum)
         alpha = torch.unsqueeze(alpha, dim = 3)
+        print(alpha.size())
         alpha_ex = alpha.expand_as(big_H)
         big_H = alpha_ex * big_H
         initial_hidden_states = torch.sum(big_H, dim= 0)
