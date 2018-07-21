@@ -59,6 +59,15 @@ class SLSTM_1(nn.Module):
         self.gated_bo = self.create_bias_variable(hidden_size, self.training, gpu)
         self.gated_bf = self.create_bias_variable(hidden_size, self.training, gpu)
 
+        ########Attention 
+        self.weight_alpha = self.create_to_hidden_variable(hidden_size,hidden_size,self.training,gpu)
+        self.bias_alpha = self.create_bias_variable(hidden_size, self.training, gpu)
+        self.word_vector = self.create_bias_variable(hidden_size, self.training, gpu)
+        #self.weight_beta = self.create_to_hidden_variable(hidden_size,hidden_size,self.training, gpu)
+        #self.bias_beta = self.create_bias_variable(hidden_size,self.training,gpu)
+        #self.hidden_vector = self.create_bias_variable(hidden_size,self.training,gpu)  
+
+
         self.h_drop = nn.Dropout(dropout)
         self.c_drop = nn.Dropout(dropout)
         if gpu:
@@ -209,6 +218,10 @@ class SLSTM_1(nn.Module):
         hidden_size = self.hidden_size
 
         padding_list = [self.create_padding_variable(self.training, self.gpu, (shape[0], step+1, hidden_size)) for step in range(self.step)]
+
+        #############Attention mechanism
+        hidden_states_list = []
+
 
         for i in range(num_layers):
             #print("[tlog] layers: " + str(i))
@@ -382,8 +395,26 @@ class SLSTM_1(nn.Module):
             initial_hidden_states = initial_hidden_states * sequence_mask
             initial_cell_states = initial_cell_states * sequence_mask
 
+            hidden_states_list.append(initial_hidden_states)
+
             dummynode_hidden_states = dummy_h_t
             dummynode_cell_states = dummy_c_t
+
+        ######Attention Machenism
+        #weight_alpha = self.create_to_hidden_variable(hidden_size, hidden_size, self.training, gpu)
+        ###sentence level attention:
+        big_H = torch.cat(hidden_states_list, dim = 0)
+        eps = torch.tanh(torch.mul(big_H, self.weight_alpha) + self.bias_alpha)
+        alpha = F.softmax(eps, dim = 0)
+        #importance_sum = k(importance_matrix)
+        #alpha = f(importance_matrix, importance_sum)
+        alpha = torch.unsqueeze(alpha, dim = 3)
+        alpha = torch.expand_as(big_H)
+        big_H = alpha * big_H
+        initial_hidden_states = torch.sum(big_H, dim= 0)
+        ########Attention Machenism
+
+
 
         initial_hidden_states = self.h_drop(initial_hidden_states)
         initial_cell_states = self.c_drop(initial_cell_states)
