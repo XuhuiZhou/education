@@ -404,7 +404,7 @@ class SLSTM_1(nn.Module):
         #weight_alpha = self.create_to_hidden_variable(hidden_size, hidden_size, self.training, gpu)
         ###sentence level attention:
         big_H = torch.cat(hidden_states_list, dim = 0)
-        eps = torch.tanh(torch.mul(big_H, self.weight_alpha) + self.bias_alpha)
+        eps = torch.tanh(torch.matmul(big_H, self.weight_alpha) + self.bias_alpha)
         alpha = F.softmax(eps, dim = 0)
         #importance_sum = k(importance_matrix)
         #alpha = f(importance_matrix, importance_sum)
