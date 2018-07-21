@@ -395,7 +395,7 @@ class SLSTM_1(nn.Module):
             initial_hidden_states = initial_hidden_states * sequence_mask
             initial_cell_states = initial_cell_states * sequence_mask
 
-            hidden_states_list.append(initial_hidden_states)
+            hidden_states_list.append(torch.unsqueeze(initial_hidden_states, dim=0))
 
             dummynode_hidden_states = dummy_h_t
             dummynode_cell_states = dummy_c_t
@@ -406,7 +406,8 @@ class SLSTM_1(nn.Module):
         big_H = torch.cat(hidden_states_list, dim = 0)
         print(big_H.size())
         eps = torch.tanh(torch.matmul(big_H, self.weight_alpha) + self.bias_alpha)
-        alpha = F.softmax(eps, dim = 0)
+        importance_matrix = torch.matmul(eps, self.word_vector)
+        alpha = F.softmax(importance_matrix, dim = 0)
         #importance_sum = k(importance_matrix)
         #alpha = f(importance_matrix, importance_sum)
         alpha = torch.unsqueeze(alpha, dim = 3)
