@@ -409,8 +409,8 @@ class SLSTM_1(nn.Module):
         #importance_sum = k(importance_matrix)
         #alpha = f(importance_matrix, importance_sum)
         alpha = torch.unsqueeze(alpha, dim = 3)
-        alpha = torch.expand_as(big_H)
-        big_H = alpha * big_H
+        alpha_ex = alpha.expand_as(big_H)
+        big_H = alpha_ex * big_H
         initial_hidden_states = torch.sum(big_H, dim= 0)
         ########Attention Machenism
 
