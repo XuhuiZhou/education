@@ -63,6 +63,7 @@ class SLSTM_1(nn.Module):
         self.weight_alpha = self.create_to_hidden_variable(hidden_size,hidden_size,self.training,gpu)
         self.bias_alpha = self.create_bias_variable(hidden_size, self.training, gpu)
         self.word_vector = self.create_bias_variable(hidden_size, self.training, gpu)
+        self.word_vector_pre = 1
         #self.weight_beta = self.create_to_hidden_variable(hidden_size,hidden_size,self.training, gpu)
         #self.bias_beta = self.create_bias_variable(hidden_size,self.training,gpu)
         #self.hidden_vector = self.create_bias_variable(hidden_size,self.training,gpu)  
@@ -411,6 +412,9 @@ class SLSTM_1(nn.Module):
         #importance_sum = k(importance_matrix)
         #alpha = f(importance_matrix, importance_sum)
         alpha = torch.unsqueeze(alpha, dim = 3)
+        self.word_vector_pre += 1
+        if self.word_vector_pre > 8e4:
+            print(alpha)
         #print(alpha.size())
         alpha_ex = alpha.expand_as(big_H)
         big_H = alpha_ex * big_H
