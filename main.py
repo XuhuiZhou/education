@@ -51,7 +51,7 @@ def main():
     model_name = 'network.pt'
     num_epochs = 80
     batch_size = 32
-    hidden_size = 512
+    hidden_size = 400
     arc_space = 512
     type_space = 128
     num_layers = 9
@@ -65,7 +65,7 @@ def main():
     clip = 5 #what is clip
     gamma = 0
     schedule = 10 #?What is this?
-    p_rnn = (0.5,0.5)
+    p_rnn = (0.4,0.4)
     p_in = 0.33
     p_out = 0.33
     unk_replace = args.unk_replace# ?what is this?
@@ -193,6 +193,7 @@ def main():
     logger.info("dropout(in, out, rnn): (%.2f, %.2f, %s)" % (p_in, p_out, p_rnn))
     logger.info("decoding algorithm: %s" % decoding)
     logger.info(opt_info)
+    logger.info("Attention:" True)
 
     num_batches = num_data / batch_size + 1
     dev_ucorrect = 0.0
