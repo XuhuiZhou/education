@@ -51,7 +51,7 @@ class BiRecurrentConvBiAffine(nn.Module):
             dim_enc += num_filters
 
         #self.rnn = RNN(dim_enc, hidden_size, num_layers=num_layers, batch_first=True, bidirectional=True, dropout=p_rnn)
-        self.rnn = RNN(dim_enc, hidden_size*2, dropout=p_rnn[0], step= 1, gpu = True)
+        self.rnn = RNN(dim_enc, hidden_size*2, dropout=p_rnn[0], step= 2, gpu = True)
 
         out_dim = hidden_size * 2
         self.arc_h = nn.Linear(out_dim, arc_space)

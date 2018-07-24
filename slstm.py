@@ -59,6 +59,17 @@ class SLSTM_1(nn.Module):
         self.gated_bo = self.create_bias_variable(hidden_size, self.training, gpu)
         self.gated_bf = self.create_bias_variable(hidden_size, self.training, gpu)
 
+
+        ########Attention 
+        """
+        self.weight_alpha = self.create_to_hidden_variable(hidden_size,hidden_size,self.training,gpu)
+        self.bias_alpha = self.create_bias_variable(hidden_size, self.training, gpu)
+        self.word_vector = self.create_bias_variable(hidden_size, self.training, gpu)
+        self.word_vector_pre = 1
+        #self.weight_beta = self.create_to_hidden_variable(hidden_size,hidden_size,self.training, gpu)
+        #self.bias_beta = self.create_bias_variable(hidden_size,self.training,gpu)
+        #self.hidden_vector = self.create_bias_variable(hidden_size,self.training,gpu)  
+        """
         self.h_drop = nn.Dropout(dropout)
         self.c_drop = nn.Dropout(dropout)
         if gpu:
@@ -384,6 +395,28 @@ class SLSTM_1(nn.Module):
 
             dummynode_hidden_states = dummy_h_t
             dummynode_cell_states = dummy_c_t
+
+        ######Attention Machenism
+        #weight_alpha = self.create_to_hidden_variable(hidden_size, hidden_size, self.training, gpu)
+        ###sentence level attention:
+        """
+        big_H = torch.cat(hidden_states_list, dim = 0)
+        #print(big_H.size())
+        eps = torch.tanh(torch.matmul(big_H, self.weight_alpha) + self.bias_alpha)
+        importance_matrix = torch.matmul(eps, self.word_vector)
+        alpha = F.softmax(importance_matrix, dim = 0)
+        #importance_sum = k(importance_matrix)
+        #alpha = f(importance_matrix, importance_sum)
+        alpha = torch.unsqueeze(alpha, dim = 3)
+        self.word_vector_pre += 1
+        if self.word_vector_pre > 8e4:
+            print(alpha)
+        #print(alpha.size())
+        alpha_ex = alpha.expand_as(big_H)
+        big_H = alpha_ex * big_H
+        initial_hidden_states = torch.sum(big_H, dim= 0)
+        ########Attention Machenism
+        """
 
         initial_hidden_states = self.h_drop(initial_hidden_states)
         initial_cell_states = self.c_drop(initial_cell_states)
