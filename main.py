@@ -193,10 +193,8 @@ def main():
     logger.info("dropout(in, out, rnn): (%.2f, %.2f, %s)" % (p_in, p_out, p_rnn))
     logger.info("decoding algorithm: %s" % decoding)
     logger.info(opt_info)
-<<<<<<< Updated upstream
-=======
+
     #logger.info("Attention")
->>>>>>> Stashed changes
 
     num_batches = num_data / batch_size + 1
     dev_ucorrect = 0.0
