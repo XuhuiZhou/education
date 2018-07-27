@@ -54,7 +54,7 @@ def main():
     hidden_size = 512
     arc_space = 512
     type_space = 128
-    num_layers = 9
+    num_layers = 10
     num_filters = 1
     learning_rate = 0.001
     opt = "adam" #default adam
@@ -65,7 +65,7 @@ def main():
     clip = 5 #what is clip
     gamma = 0
     schedule = 10 #?What is this?
-    p_rnn = (0.5,0.5)
+    p_rnn = (0.05,0.05)
     p_in = 0.33
     p_out = 0.33
     unk_replace = args.unk_replace# ?what is this?

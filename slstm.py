@@ -396,6 +396,9 @@ class SLSTM_1(nn.Module):
             dummynode_hidden_states = dummy_h_t
             dummynode_cell_states = dummy_c_t
 
+            initial_hidden_states = self.h_drop(initial_hidden_states)
+            initial_cell_states = self.c_drop(initial_cell_states)
+
         ######Attention Machenism
         #weight_alpha = self.create_to_hidden_variable(hidden_size, hidden_size, self.training, gpu)
         ###sentence level attention:
@@ -418,7 +421,7 @@ class SLSTM_1(nn.Module):
         ########Attention Machenism
         """
 
-        initial_hidden_states = self.h_drop(initial_hidden_states)
-        initial_cell_states = self.c_drop(initial_cell_states)
+        #initial_hidden_states = self.h_drop(initial_hidden_states)
+        #initial_cell_states = self.c_drop(initial_cell_states)
         ##print("[tlog] initial_hidden_states: " + str(initial_hidden_states))
         return initial_hidden_states, initial_cell_states
