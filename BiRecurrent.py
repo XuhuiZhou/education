@@ -9,11 +9,12 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from lstm import VarMaskedFastLSTM
 #from s-lstm import VarMasked_S_LSTM
-from mlstm import SLSTM
+#from mlstm import SLSTM
 from slstm import SLSTM_1
 from neuronlp2.nn import Embedding
 from neuronlp2.nn import BiAAttention, BiLinear
 from neuronlp2.tasks import parser
+from nn import TriAAttention
 import os 
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = '2'
@@ -56,7 +57,9 @@ class BiRecurrentConvBiAffine(nn.Module):
         out_dim = hidden_size * 2
         self.arc_h = nn.Linear(out_dim, arc_space)
         self.arc_c = nn.Linear(out_dim, arc_space)
-        self.attention = BiAAttention(arc_space, arc_space, 1, biaffine=biaffine)
+        #self.attention = BiAAttention(arc_space, arc_space, 1, biaffine=biaffine)
+        self.attention = TriAAttention(out_dim, arc_space, arc_space, 1, biaffine=biaffine)
+
 
         self.type_h = nn.Linear(out_dim, type_space)
         self.type_c = nn.Linear(out_dim, type_space)
@@ -79,7 +82,7 @@ class BiRecurrentConvBiAffine(nn.Module):
         # output from rnn [batch, length, hidden_size]
         #print("input")
         #print(input) 64*40*200
-        output, hn = self.rnn(input,mask,num_layers=self.num_layers)
+        g_node, output, hn = self.rnn(input,mask,num_layers=self.num_layers)
         #output, hn = self.rnn(input,mask,hx)
         #print("output")64*40*512
         #print(output)
@@ -109,7 +112,7 @@ class BiRecurrentConvBiAffine(nn.Module):
         type_h = type_h.contiguous()
         type_c = type_c.contiguous()
 
-        return (arc_h, arc_c), (type_h, type_c), hn, mask, length
+        return g_node, (arc_h, arc_c), (type_h, type_c), hn, mask, length
 
     def forward(self, input_word, input_char, input_pos, mask=None, length=None, hx=None):
         # output from rnn [batch, length, tag_space]
@@ -121,14 +124,15 @@ class BiRecurrentConvBiAffine(nn.Module):
             print("input_pos")
             print(input_pos)
         """
-        arc, type, _, mask, length = self._get_rnn_output(input_word, input_char, input_pos, mask=mask, length=length, hx=hx)
+        g_node, arc, type, _, mask, length = self._get_rnn_output(input_word, input_char, input_pos, mask=mask, length=length, hx=hx)
         # [batch, length, length]
         """
         if self.i >0:
             print("____________")
             print(arc, type, mask, length)
         """
-        out_arc = self.attention(arc[0], arc[1], mask_d=mask, mask_e=mask).squeeze(dim=1)
+        #out_arc = self.attention(arc[0], arc[1], mask_d=mask, mask_e=mask).squeeze(dim=1)
+        out_arc = self.attention(arc[0], arc[1], g_node, mask_d=mask, mask_e=mask).squeeze(dim=1)
         
         self.i =0
         return out_arc, type, mask, length

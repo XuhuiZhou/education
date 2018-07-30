@@ -195,7 +195,7 @@ class SLSTM_1(nn.Module):
         ##print("[tlog] shape: " + str(shape)) # 10, 37, 100
 
         # initial embedding states
-        embedding_hidden_state = initial_hidden_states.view(-1, self.word_dim)  # 10*40, 600
+        embedding_hidden_state_pre = initial_hidden_states.view(-1, self.word_dim)  # 10*40, 600
         #embedding_cell_state = initial_cell_states.view(-1, self.word_dim)  # 10*40, 600
 
         # randomly initialize the states
@@ -225,6 +225,12 @@ class SLSTM_1(nn.Module):
             #print("[tlog] layers: " + str(i))
             # update dummy node states
             # average states
+            initial_hidden_states = self.h_drop(initial_hidden_states)
+
+            embedding_hidden_state = self.c_drop(embedding_hidden_state_pre)
+            dummynode_hidden_states = self.h_drop(dummynode_hidden_states)
+
+
             combined_word_hidden_state = torch.mean(initial_hidden_states, dim=1)
 
             ##print("[tlog] combined_word_hidden_state: " + str(combined_word_hidden_state))
@@ -418,7 +424,5 @@ class SLSTM_1(nn.Module):
         ########Attention Machenism
         """
 
-        initial_hidden_states = self.h_drop(initial_hidden_states)
-        initial_cell_states = self.c_drop(initial_cell_states)
         ##print("[tlog] initial_hidden_states: " + str(initial_hidden_states))
-        return initial_hidden_states, initial_cell_states
+        return dummynode_hidden_states, initial_hidden_states, initial_cell_states
