@@ -54,7 +54,7 @@ def main():
     hidden_size = 512
     arc_space = 512
     type_space = 128
-    num_layers = 9
+    num_layers = 1
     num_filters = 1
     learning_rate = 0.001
     opt = "adam" #default adam
